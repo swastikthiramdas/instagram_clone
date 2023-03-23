@@ -8,7 +8,7 @@ import 'package:instagram_clone/widgets/comment_card.dart';
 import 'package:provider/provider.dart';
 
 class CommentsScreen extends StatefulWidget {
-  final String snap;
+  final snap;
 
   const CommentsScreen({Key? key, required this.snap}) : super(key: key);
 
@@ -37,8 +37,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('post')
-            .doc(widget.snap)
+            .doc(widget.snap['postId'])
             .collection('comments')
+            .orderBy(
+              'fielddatePublished',
+              descending: true,
+            )
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -47,9 +51,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
             );
           }
           return ListView.builder(
-              itemCount: (snapshot.data as dynamic).data.length,
+              itemCount: (snapshot.data! as dynamic).docs.length,
               itemBuilder: (context, index) {
-                return const Commentcard();
+                return Commentcard(
+                    snap: (snapshot.data! as dynamic).docs[index]);
               });
         },
       ),
@@ -78,6 +83,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
               InkWell(
                 onTap: () async {
+
                   await FirebaseMethods().PostComment(
                     widget.snap,
                     _CommentController.text,
@@ -85,10 +91,16 @@ class _CommentsScreenState extends State<CommentsScreen> {
                     user.username!,
                     user.photoUrl!,
                   );
+
+                  setState(() {
+                    _CommentController.text = "";
+                  });
                 },
                 child: const Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 8.0),
+                    horizontal: 8.0,
+                    vertical: 8.0,
+                  ),
                   child: Text(
                     'Post',
                     style: TextStyle(color: blueColor),
