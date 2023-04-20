@@ -13,11 +13,10 @@ class AuthMethods {
   Future<UserModel> getUser() async {
     User currentUser = _auth.currentUser!;
 
-    DocumentSnapshot snap = await _firestore.collection('users').doc(currentUser.uid).get();
+    DocumentSnapshot snap =
+        await _firestore.collection('users').doc(currentUser.uid).get();
     return UserModel.fromSnap(snap);
-
   }
-
 
   Future<String> signUpUser({
     required String email,
@@ -33,7 +32,6 @@ class AuthMethods {
           username.isNotEmpty ||
           bio.isNotEmpty ||
           file != null) {
-
         //  Register User
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
@@ -42,12 +40,18 @@ class AuthMethods {
             .uploadImageToStorage('profilePic/', file!, false);
         final String uid = cred.user!.uid;
 
-        UserModel user = UserModel(followers: [], following: [], photoUrl: photoUrl, uid: uid, email: email, username: username, bio: bio);
+        UserModel user = UserModel(
+            followers: [],
+            following: [],
+            photoUrl: photoUrl,
+            uid: uid,
+            email: email,
+            username: username,
+            bio: bio);
 
         _firestore.collection('users').doc(uid).set(user.toJason());
 
         res = 'Success';
-
       }
     } catch (err) {
       res = err.toString();
@@ -56,16 +60,17 @@ class AuthMethods {
     return res;
   }
 
-  Future<String> loginUser({required String email, required String password}) async {
+  Future<String> loginUser(
+      {required String email, required String password}) async {
     String ref = 'Something went wrong';
-    try{
+    try {
       if (email.isNotEmpty && password.isNotEmpty) {
         _auth.signInWithEmailAndPassword(email: email, password: password);
         ref = 'Success';
-      } else{
+      } else {
         ref = 'Enter Details';
       }
-    }catch(err){
+    } catch (err) {
       ref = err.toString();
     }
     return ref;

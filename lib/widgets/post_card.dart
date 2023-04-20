@@ -61,7 +61,8 @@ class _PostCardState extends State<PostCard> {
                               .map(
                                 (e) => InkWell(
                                   onTap: () {
-                                    FirebaseMethods().deletePost(widget.snap['postId']);
+                                    FirebaseMethods()
+                                        .deletePost(widget.snap['postId']);
                                     Navigator.of(context).pop();
                                   },
                                   child: Container(
@@ -146,11 +147,13 @@ class _PostCardState extends State<PostCard> {
                         );
                       },
                       icon: widget.snap['likes'].contains(users.uid)
-                          ? Icon(
+                          ? const Icon(
                               Icons.favorite,
                               color: Colors.red,
                             )
-                          : Icon(Icons.favorite_border),
+                          : const Icon(
+                              Icons.favorite_border,
+                            ),
                     ),
                   ),
                   IconButton(
@@ -194,21 +197,21 @@ class _PostCardState extends State<PostCard> {
                       .textTheme
                       .subtitle2!
                       .copyWith(fontWeight: FontWeight.w800),
-                  child: Text(
-                    '${widget.snap['likes'].length} likes',
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
+                  child: Text('${widget.snap['likes'].length} likes',
+                      style: Theme.of(context).textTheme.bodyText2),
                 ),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(top: 8),
                   child: RichText(
                     text: TextSpan(
-                      style: TextStyle(color: primaryColor),
+                      style: const TextStyle(
+                        color: primaryColor,
+                      ),
                       children: [
                         TextSpan(
                           text: widget.snap['username'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -221,7 +224,7 @@ class _PostCardState extends State<PostCard> {
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
+                  child: const Text(
                     'View all 200 comments',
                     style: const TextStyle(
                       fontSize: 16,
