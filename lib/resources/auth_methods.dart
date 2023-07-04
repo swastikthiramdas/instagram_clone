@@ -14,43 +14,58 @@ class AuthMethods {
     User currentUser = _auth.currentUser!;
 
     DocumentSnapshot snap =
-        await _firestore.collection('users').doc(currentUser.uid).get();
+    await _firestore.collection('users').doc(currentUser.uid).get();
     return UserModel.fromSnap(snap);
+  }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 
   Future<String> signUpUser({
     required String email,
     required String password,
     required String username,
-    required String bio,
-    required Uint8List? file,
+    required String name,
+    required Uint8List file,
   }) async {
     String res = 'Some error occurred';
     try {
+
+      print(email);
+      print(password);
+      print(username);
+      print(name);
       if (email.isNotEmpty ||
           password.isNotEmpty ||
           username.isNotEmpty ||
-          bio.isNotEmpty ||
-          file != null) {
+          name.isNotEmpty ) {
+
         //  Register User
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
 
+        print('registration done');
+
         String photoUrl = await StorageMethod()
-            .uploadImageToStorage('profilePic/', file!, false);
-        final String uid = cred.user!.uid;
+            .uploadImageToStorage('profilePic/', file, false);
+
+        print('uploaded photo');
+        String uid = cred.user!.uid;
 
         UserModel user = UserModel(
-            followers: [],
-            following: [],
-            photoUrl: photoUrl,
-            uid: uid,
-            email: email,
-            username: username,
-            bio: bio);
+          followers: [],
+          following: [],
+          photoUrl: photoUrl,
+          uid: uid,
+          email: email,
+          username: username,
+          bio: '',
+          name: name,
+        );
 
         _firestore.collection('users').doc(uid).set(user.toJason());
-
+        print('Data Updated in firestore');
         res = 'Success';
       }
     } catch (err) {
@@ -60,8 +75,10 @@ class AuthMethods {
     return res;
   }
 
-  Future<String> loginUser(
-      {required String email, required String password}) async {
+  Future<String> loginUser({
+    required String email,
+    required String password,
+  }) async {
     String ref = 'Something went wrong';
     try {
       if (email.isNotEmpty && password.isNotEmpty) {

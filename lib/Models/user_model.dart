@@ -5,6 +5,7 @@ class UserModel {
   final String? email;
   final String? uid;
   final String? username;
+  final String? name;
   final String? bio;
   final List? followers;
   final List? following;
@@ -15,6 +16,7 @@ class UserModel {
     required this.following,
     required this.photoUrl,
     required this.uid,
+    required this.name,
     required this.email,
     required this.username,
     required this.bio,
@@ -24,6 +26,7 @@ class UserModel {
         'username': username,
         'email': email,
         'bio': bio,
+        'name': name,
         'uid': uid,
         'photoUrl': photoUrl,
         'following': following,
@@ -38,6 +41,7 @@ class UserModel {
       following: snapshot['following'],
       photoUrl: snapshot['photoUrl'],
       uid: snapshot['uid'],
+      name: snapshot['name'],
       email: snapshot['email'],
       username: snapshot['username'],
       bio: snapshot['bio'],

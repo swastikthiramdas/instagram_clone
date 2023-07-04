@@ -19,7 +19,6 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _bioController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -48,18 +47,26 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       isLoding = true;
     });
+
+    print(_emailController.text);
+    print(_passwordController.text);
+    print(_usernameController.text);
+    print(_nameController.text);
+
     String ref = await AuthMethods().signUpUser(
       email: _emailController.text,
       password: _passwordController.text,
       username: _usernameController.text,
-      bio: _bioController.text,
       file: _image!,
+      name: _nameController.text,
     );
 
     setState(() {
       isLoding = false;
     });
+
     if (ref == 'Success') {
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => ResponsiveLayout(
@@ -68,8 +75,11 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
       );
+
     } else {
+
       showSnakBar(ref, context);
+
     }
   }
 
@@ -85,18 +95,20 @@ class _SignupScreenState extends State<SignupScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 100),
+                  const SizedBox(height: 100),
                   SvgPicture.asset(
                     'assets/images/ic_instagram.svg',
                     color: primaryColor,
                     height: 64,
                   ),
-                  SizedBox(height: 60),
+                  const SizedBox(height: 60),
                   Stack(
                     children: [
                       _image != null
                           ? CircleAvatar(
-                              radius: 64, backgroundImage: MemoryImage(_image!))
+                              radius: 64,
+                              backgroundImage: MemoryImage(_image!),
+                            )
                           : CircleAvatar(
                               radius: 64,
                               backgroundImage: NetworkImage(img),
@@ -113,7 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       )
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
               Column(
@@ -124,26 +136,26 @@ class _SignupScreenState extends State<SignupScreen> {
                     textInputType: TextInputType.emailAddress,
                     textEditingController: _usernameController,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFieldInput(
                     hinText: 'Enter Name',
                     textInputType: TextInputType.emailAddress,
                     textEditingController: _nameController,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFieldInput(
                     hinText: 'Enter Email',
                     textInputType: TextInputType.emailAddress,
                     textEditingController: _emailController,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFieldInput(
                     hinText: 'Enter Password',
                     textInputType: TextInputType.text,
                     isPass: true,
                     textEditingController: _passwordController,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
               Column(
